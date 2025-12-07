@@ -1,0 +1,25 @@
+# Halloy config.
+#
+# For a complete list of available options,
+# please visit https://halloy.chat/configuration.html
+
+[servers.liberachat]
+nickname = "__NICKNAME__"
+server = "irc.libera.chat"
+channels = ["#halloy"]
+protocol = "irc"  # Optional: "irc" (default) or "veilid"
+
+# Example veilid server configuration:
+# [servers.veilid-example]
+# protocol = "veilid"
+# nickname = "__NICKNAME__"
+# # For Veilid, you need to provide the route blob (base64 encoded) instead of server/port
+# # Get this from the person you want to connect to (they need to spawn a veilid node first)
+# veilid_route_blob = "ARAeUAECAQJRBAEBURgBAg8wRExWEAT/7sdvWj8/v1kDYXE+XfS/ULf8x31NITI+Sdjf66qhzlTBAAARBARBEAL/JVPBhu0kDCADmZ0m5USL70BUlzXIyWMvlkwvYhSUwwWHEQQDMQ3yAf9w0MAGY9qk4gnK1d4qtaaKLcFTETRXD7N27+N4ZB46mcJ9csfX/uxApBr5BiDV/J0IU3u/CS1+k5MjmdMaiMvWdNqRh8RvBLE/3E60qWAAZMQ/JkdnKkeM"
+
+[servers.veilid-example]
+protocol = "veilid"
+nickname = "VeilidTest"
+# # For Veilid, you need to provide the route blob (base64 encoded) instead of server/port
+# # Get this from the person you want to connect to (they need to spawn a veilid node first)
+veilid_route_blob = "ARAeUAECAQJRBAEBURgBAg8wRExWEAT/7sdvWj8/v1kDYXE+XfS/ULf8x31NITI+Sdjf66qhzlTBAAARBARBEAL/JVPBhu0kDCADmZ0m5USL70BUlzXIyWMvlkwvYhSUwwWHEQQDMQ3yAf9w0MAGY9qk4gnK1d4qtaaKLcFTETRXD7N27+N4ZB46mcJ9csfX/uxApBr5BiDV/J0IU3u/CS1+k5MjmdMaiMvWdNqRh8RvBLE/3E60qWAAZMQ/JkdnKkeM"

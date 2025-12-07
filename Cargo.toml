@@ -1,0 +1,167 @@
+[package]
+name = "halloy"
+description = "Halloy IRC Client"
+documentation = "https://halloy.chat/"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+
+[features]
+default = []
+debug = ["iced/debug"]
+dev = ["debug", "data/dev"]
+# tor = ["data/tor"]
+
+[workspace]
+members = ["data", "ipc", "irc", "irc/proto", "veilid"]
+
+[workspace.package]
+version = "0.1.0"
+authors = ["Casper Rogild Storm", "Cory Forsstrom", "Andrew Baldwin"]
+license = "GPL-3.0-or-later"
+edition = "2024"
+
+[workspace.dependencies]
+tokio = { version = "1.44.0" }
+futures = "0.3.30"
+thiserror = "2.0.12"
+chrono = { version = "0.4.40", features = ['serde'] }
+bytes = "1.10.1"
+strum = { version = "0.27.1", features = ["derive"] }
+anyhow = "1.0.97"
+url = { version = "2.5.0", features = ["serde"] }
+tokio-stream = { version = "0.1" }
+timeago = "0.5.0"
+itertools = "0.14.0"
+emojis = "0.7.0"
+rand = "0.9.0"
+rand_chacha = "0.9.0"
+palette = "0.7.4"
+log = { version = "0.4.26", features = ['std'] }
+uptime_lib = "0.3.1"
+
+[dependencies]
+tokio = { workspace = true, features = ["rt", "fs", "process"] }
+futures = { workspace = true }
+thiserror = { workspace = true }
+chrono = { workspace = true }
+strum = { workspace = true }
+anyhow = { workspace = true }
+url = { workspace = true }
+tokio-stream = { workspace = true, features = ["fs"] }
+timeago = { workspace = true }
+itertools = { workspace = true }
+emojis = { workspace = true }
+rand = { workspace = true }
+rand_chacha = { workspace = true }
+palette = { workspace = true }
+log = { workspace = true }
+uptime_lib = { workspace = true }
+
+data = { version = "0.1.0", path = "data" }
+ipc = { version = "0.1.0", path = "ipc" }
+irc = { version = "0.1.0", path = "irc" }
+
+signal-hook = "0.3.18"
+nucleo-matcher = "0.3.1"
+notify-rust = "4.11"
+fern = "0.7.1"
+iced = { version = "0.14.0-dev", default-features = false, features = [
+    "wgpu",
+    "tiny-skia",
+    "fira-sans",
+    "tokio",
+    "lazy",
+    "advanced",
+    "image",
+    "svg",
+    "wayland",
+    "x11",
+    "crisp",
+    "web-colors",
+] }
+unicode-segmentation = "1.6"
+open = "5.0.1"
+bytesize = "2.0.1"
+const_format = "0.2.32"
+rodio = "0.21.0"
+humantime = "2.2.0"
+strsim = "0.11.1"
+rfd = { version = "0.15.2", default-features = false, features = [
+    "xdg-portal",
+    "tokio",
+] }
+uuid = { version = "1.17", features = ["v4"] }
+mundy = { version = "0.1.9", default-features = false, features = [
+    "color-scheme",
+    "tokio",
+    "log",
+] }
+
+[target.'cfg(windows)'.dependencies]
+image = "0.24.6"
+iced = { version = "0.14.0-dev", default-features = false, features = [
+    "web-colors",
+    "sysinfo",
+] }
+
+[target.'cfg(windows)'.build-dependencies]
+embed-resource = "3.0.2"
+windows_exe_info = "0.4"
+
+[patch.crates-io]
+iced = { git = "https://github.com/squidowl/iced", rev = "78ed897db06129746b5029c47db586f16d63511b" }
+iced_core = { git = "https://github.com/squidowl/iced", rev = "78ed897db06129746b5029c47db586f16d63511b" }
+iced_wgpu = { git = "https://github.com/squidowl/iced", rev = "78ed897db06129746b5029c47db586f16d63511b" }
+
+[profile.ci]
+inherits = "dev"
+opt-level = 0
+
+# Enable a small amount of optimization in the dev profile.
+[profile.dev]
+opt-level = 1
+
+# Enable a large amount of optimization in the dev profile for dependencies.
+[profile.dev.package."*"]
+opt-level = 3
+
+[lints.clippy]
+cloned_instead_of_copied = "deny"
+default_trait_access = "deny"
+ignored_unit_patterns = "deny"
+items_after_statements = "deny"
+manual_is_variant_and = "deny"
+manual_string_new = "deny"
+map_unwrap_or = "deny"
+redundant_closure_for_method_calls = "deny"
+semicolon_if_nothing_returned = "deny"
+uninlined_format_args = "deny"
+unnecessary_wraps = "deny"
+
+[workspace.lints.clippy]
+cloned_instead_of_copied = "deny"
+default_trait_access = "deny"
+ignored_unit_patterns = "deny"
+items_after_statements = "deny"
+manual_is_variant_and = "deny"
+manual_string_new = "deny"
+map_unwrap_or = "deny"
+redundant_closure_for_method_calls = "deny"
+semicolon_if_nothing_returned = "deny"
+uninlined_format_args = "deny"
+unnecessary_wraps = "deny"
+
+[workspace.metadata.typos.default]
+extend-ignore-re = [
+    "(?Rm)^.*(#|//)\\s*spellchecker:disable-line$", # Ignore lines with trailing spellchecker:disable-line
+]
+extend-ignore-identifiers-re = [
+    "ERR_[A-Z]+", # IRC Error Numeric
+    "RPL_[A-Z]+", # IRC Reply Numeric
+    "TehPeGaSuS",
+]
+
+[workspace.metadata.typos.files]
+extend-exclude = ["data/tests/message/*.json"]
