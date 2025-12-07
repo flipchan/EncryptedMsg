@@ -1,0 +1,23 @@
+[package]
+name = "ipc"
+version.workspace = true
+authors.workspace = true
+license.workspace = true
+edition.workspace = true
+
+[dependencies]
+url = { workspace = true }
+tokio = { workspace = true, features = ["rt", "fs", "process"] }
+futures = { workspace = true }
+log = { workspace = true, features = ['std'] }
+thiserror = { workspace = true }
+rand = { workspace = true }
+rand_chacha = { workspace = true }
+
+interprocess = { version = "1.2.1", features = ["tokio_support"] }
+
+[dependencies.data]
+path = "../data"
+
+[lints]
+workspace = true
