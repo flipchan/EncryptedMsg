@@ -1,0 +1,187 @@
+use serde::Deserialize;
+
+use crate::config::inclusivities::{
+    Inclusivities, is_source_included, is_target_included,
+};
+use crate::message::Source;
+use crate::{Server, Target, isupport, target};
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default)]
+pub struct Preview {
+    pub enabled: bool,
+    pub request: Request,
+    pub card: Card,
+    pub image: Image,
+}
+
+impl Default for Preview {
+    fn default() -> Self {
+        Self {
+            enabled: true,
+            request: Request::default(),
+            card: Card::default(),
+            image: Image::default(),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default)]
+pub struct Request {
+    /// Request user agent
+    ///
+    /// Some servers will only send opengraph metadata to
+    /// browser-like user agents. We default to `WhatsApp/2`
+    /// for wide compatibility
+    pub user_agent: String,
+    /// Request timeout in millisceonds
+    pub timeout_ms: u64,
+    /// Max image size in bytes
+    ///
+    /// This prevents downloading images that are too big
+    pub max_image_size: usize,
+    /// Max bytes streamed when scraping for opengraph metadata
+    /// before cancelling the request
+    ///
+    /// This prevents downloading responses that are too big
+    pub max_scrape_size: usize,
+    /// Number of allowed concurrent requests for fetching previews
+    ///
+    /// Reduce this to prevent rate-limiting
+    pub concurrency: usize,
+    /// Number of milliseconds to wait before requesting another preview
+    /// when number of requested previews > `concurrency`
+    pub delay_ms: u64,
+}
+
+impl Default for Request {
+    fn default() -> Self {
+        Self {
+            user_agent: "WhatsApp/2".to_string(),
+            timeout_ms: 10 * 1_000,
+            max_image_size: 10 * 1024 * 1024,
+            max_scrape_size: 500 * 1024,
+            concurrency: 4,
+            delay_ms: 500,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default)]
+pub struct Card {
+    pub exclude: Option<Inclusivities>,
+    pub include: Option<Inclusivities>,
+    pub show_image: bool,
+    pub round_image_corners: bool,
+}
+
+impl Default for Card {
+    fn default() -> Self {
+        Self {
+            exclude: None,
+            include: None,
+            show_image: true,
+            round_image_corners: true,
+        }
+    }
+}
+
+impl Card {
+    pub fn visible(
+        &self,
+        target: &Target,
+        server: &Server,
+        casemapping: isupport::CaseMap,
+    ) -> bool {
+        is_target_included(
+            self.include.as_ref(),
+            self.exclude.as_ref(),
+            None,
+            target,
+            server,
+            casemapping,
+        )
+    }
+
+    pub fn visible_for_source(
+        &self,
+        source: &Source,
+        channel: Option<&target::Channel>,
+        server: Option<&Server>,
+        casemapping: isupport::CaseMap,
+    ) -> bool {
+        is_source_included(
+            self.include.as_ref(),
+            self.exclude.as_ref(),
+            source,
+            channel,
+            server,
+            casemapping,
+        )
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
+#[serde(default)]
+pub struct Image {
+    pub action: ImageAction,
+    pub exclude: Option<Inclusivities>,
+    pub include: Option<Inclusivities>,
+    pub round_corners: bool,
+}
+
+impl Default for Image {
+    fn default() -> Self {
+        Self {
+            action: ImageAction::default(),
+            exclude: None,
+            include: None,
+            round_corners: true,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize, Default)]
+#[serde(rename_all = "kebab-case")]
+pub enum ImageAction {
+    OpenUrl,
+    #[default]
+    Preview,
+}
+
+impl Image {
+    pub fn visible(
+        &self,
+        target: &Target,
+        server: &Server,
+        casemapping: isupport::CaseMap,
+    ) -> bool {
+        is_target_included(
+            self.include.as_ref(),
+            self.exclude.as_ref(),
+            None,
+            target,
+            server,
+            casemapping,
+        )
+    }
+
+    pub fn visible_for_source(
+        &self,
+        source: &Source,
+        channel: Option<&target::Channel>,
+        server: Option<&Server>,
+        casemapping: isupport::CaseMap,
+    ) -> bool {
+        is_source_included(
+            self.include.as_ref(),
+            self.exclude.as_ref(),
+            source,
+            channel,
+            server,
+            casemapping,
+        )
+    }
+}
