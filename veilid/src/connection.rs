@@ -1,11 +1,11 @@
+use futures::channel::mpsc;
+use futures::{Sink, Stream};
 use std::path::PathBuf;
 use std::pin::Pin;
 use std::sync::Arc;
 use std::task::{Context, Poll};
-
-use futures::channel::mpsc;
-use futures::{Sink, Stream};
 use tokio::sync::Mutex;
+use tokio::time::Duration;
 use veilid_core::{
     RouteId, Target, VeilidAPI, VeilidAPIError, VeilidAPIResult, VeilidConfig,
     VeilidConfigProtectedStore, VeilidConfigTableStore, VeilidUpdate,
@@ -98,11 +98,12 @@ impl Connection {
             let route_id = loop {
                 match veilid_api
                     .import_remote_private_route(route_blob.clone())
-                    .await
+//                    .await
                 {
                     Ok(rid) => break rid,
                     Err(VeilidAPIError::TryAgain { .. }) => {
-                        veilid_tools::sleep(1000).await;
+                        tokio::time::sleep(Duration::from_secs(3)).await;
+                        //                        veilid_tools::sleep(1000).await;
                         continue;
                     }
                     Err(e) => {
@@ -152,7 +153,8 @@ impl Connection {
                 {
                     Ok(()) => return Ok(()),
                     Err(VeilidAPIError::TryAgain { .. }) => {
-                        veilid_tools::sleep(1000).await;
+                        tokio::time::sleep(Duration::from_secs(3)).await;
+                        //                        veilid_tools::sleep(1000).await;
                         continue;
                     }
                     Err(e) => return Err(Error::VeilidApi(e)),

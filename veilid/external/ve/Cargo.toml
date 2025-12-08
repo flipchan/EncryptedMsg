@@ -1,0 +1,17 @@
+[package]
+name = "ve"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+veilid-core = "0.4.8"
+veilid-tools = "0.4.8"
+tokio = "1.45.1"
+tracing = "0.1.41"
+async-stdin = "0.3.1"
+data-encoding = "2.9.0"
+tracing-subscriber = "0.3.19"
+anyhow = "1.0.100"
+ctrlc = "3.4.7"
+temp-dir = "0.1.16"
+tempfile = "3.23.0"

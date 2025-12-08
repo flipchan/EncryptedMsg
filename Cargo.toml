@@ -59,7 +59,7 @@ palette = { workspace = true }
 log = { workspace = true }
 uptime_lib = { workspace = true }
 
-data = { version = "0.1.0", path = "data" }
+data = { version = "0.1.0", path = "data", features=["veilid"] }
 ipc = { version = "0.1.0", path = "ipc" }
 irc = { version = "0.1.0", path = "irc" }
 
